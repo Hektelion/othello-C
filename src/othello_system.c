@@ -1,6 +1,11 @@
 #include "../include/othello_system.h"
 #include "../include/include.h"
 
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int init_SDL(){
 	//============================================
 	//			INITIALISATION DE SDL2
@@ -17,6 +22,12 @@ int init_SDL(){
 	fprintf(stdout, "Initialisation de la bibliothèque SDL : OK\n");
 	return EXIT_SUCCESS;
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int init_SDL_TTF(){
 	//============================================
 	//			INITIALISATION DE SDL_ttf
@@ -33,6 +44,12 @@ int init_SDL_TTF(){
 	fprintf(stdout, "Initialisation de la bibliothèque SDL_ttf : OK\n");
 	return EXIT_SUCCESS;
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int create_window(SDL_Window **window){
 	//============================================
 	//			CREATION DE LA FENETRE
@@ -56,6 +73,12 @@ int create_window(SDL_Window **window){
     fprintf(stdout, "Création de la fenetre : OK\n");
 	return EXIT_SUCCESS;
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int create_renderer(SDL_Window *window, SDL_Renderer **renderer){
 	//============================================
 	//		CREATION DU MOTEUR DE RENDU
@@ -76,6 +99,12 @@ int create_renderer(SDL_Window *window, SDL_Renderer **renderer){
     fprintf(stdout, "Création du moteur de rendu : OK\n");
 	return EXIT_SUCCESS;
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int init_System(SDL_Window *window, SDL_Renderer **renderer){
 	if( init_SDL() ){
 		return EXIT_FAILURE;
@@ -92,6 +121,11 @@ int init_System(SDL_Window *window, SDL_Renderer **renderer){
 	return EXIT_SUCCESS;
 }
 
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 void close_window(SDL_Window *window){
 	//============================================
 	//		DESTRUCTION DE LA FENETRE
@@ -103,6 +137,12 @@ void close_window(SDL_Window *window){
         SDL_DestroyWindow(window);
     }
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 void close_renderer(SDL_Renderer *renderer){
 	//============================================
 	//		DESTRUCTION DU MOTEUR DE RENDU
@@ -113,6 +153,12 @@ void close_renderer(SDL_Renderer *renderer){
         SDL_DestroyRenderer(renderer);
     }
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 void close_System(SDL_Window *window, SDL_Renderer *renderer){
 	close_window(window);
 	close_renderer(renderer);

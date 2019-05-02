@@ -120,7 +120,8 @@ void get_validMove(char o[][N], coup c_possible[], int player){
  * Sorties    : la valeur évalué
  * Variables  : copy_o (un tableau 2D de caractères), value (un entier),
  				nbMove (un entier), c_possible (un tableau de coup)
- * Traitement : 
+ * Traitement : Determine à une profondeur donné et à l'aide d'appel recursif
+ 				le meileur coup (d'après la fonction d'évaluation utilisé)
  */
 float minimax(char o[][N], int depth, int player){
 	char copy_o[N][N];

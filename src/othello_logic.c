@@ -1,10 +1,11 @@
 #include "../include/othello_logic.h"
 #include "../include/include.h"
 
-/* Entrées    :
- * Sorties    :
+/* Entrées    : o (un tableau 2D de caractères)
+ * Sorties    : Le code d'erreur de la fonction
  * Variables  :
- * Traitement :
+ * Traitement : Initialise l'othellier dans un premier temps à vide
+ 				puis de façon reglementaire
  */
 int initOthello(char o[][N]){
 	//INITIALISATION A VIDE
@@ -25,10 +26,11 @@ int initOthello(char o[][N]){
 	return 0;
 }
 
-/* Entrées    :
- * Sorties    :
+/* Entrées    : o (un tableau 2D de caractères)
+ * Sorties    : Le code d'erreur de la fonction
  * Variables  :
- * Traitement :
+ * Traitement : Affiche l'othellier dans le terminal
+ 				(Utiliser en tant que log)
  */
 int printOthello(char o[][N]){
 
@@ -59,28 +61,30 @@ int printOthello(char o[][N]){
 	return 0;
 }
 
-/* Entrées    :
- * Sorties    :
+/* Entrées    : x (un entier), y (un entier)
+ * Sorties    : le resultat d'une assertion
  * Variables  :
- * Traitement :
+ * Traitement : en fonction des coordonnées passé en paramètre
+ 				renvoi 1 si le point est dans l'othellier sinon renvoi 0
  */
 int isInOthello(int x, int y){
 	return ( (y >= 0) && (y < N) && (x >= 0) && (x < N) );
 }
 
-/* Entrées    :
- * Sorties    :
+/* Entrées    : player (un entier)
+ * Sorties    : le joueur suivant
  * Variables  :
- * Traitement :
+ * Traitement : renvoi le joueur suivant (0 ou 1)
  */
 int nextPlayer(int player){
 	return( player+1 )%2;
 }
 
-/* Entrées    :
- * Sorties    :
+/* Entrées    : o (un tableau 2D de caractères), x (un entier), y (un entier),
+				player (un entier)
+ * Sorties    : Le code d'erreur de la fonction
  * Variables  :
- * Traitement :
+ * Traitement : Ajoute une pierre sur l'othellier
  */
 int addStone(char o[][N], int x, int y, int player){
 	//ATTRIBUTION DES PIONS ALLY ET ENEMY
@@ -94,14 +98,15 @@ int addStone(char o[][N], int x, int y, int player){
 		return 0;
 	}
 	else{
+		fprintf(stderr, "Erreur addStone : le coup (%d,%d) n'est pas dans le plateau\n", x, y);
 		return -1;
 	}
 }
 
-/* Entrées    :
- * Sorties    :
+/* Entrées    : o (un tableau 2D de caractères), x (un entier), y (un entier)
+ * Sorties    : Le code d'erreur de la fonction
  * Variables  :
- * Traitement :
+ * Traitement : Supprime une pierre de l'othellier
  */
 int delStone(char o[][N], int x, int y){
 	if( isInOthello(x,y) ){
@@ -109,14 +114,17 @@ int delStone(char o[][N], int x, int y){
 		return 0;
 	}
 	else{
+		fprintf(stderr, "Erreur delStone : le coup (%d,%d) n'est pas dans le plateau\n", x, y);
 		return -1;
 	}
 }
 
-/* Entrées    :
- * Sorties    :
- * Variables  :
- * Traitement :
+/* Entrées    : o (un tableau 2D de caractères), line (un entier),
+				column (un entier), player (un entier)
+ * Sorties    : un entier
+ * Variables  : i  (un entier), j  (un entier), exec  (un entier),
+ 				cAlly (un caractère), cEnemy (un caractère)
+ * Traitement : Retourne 1 si le coup est valide sinon renvoi 0
  */
 int isValidMove(char o[][N], int line, int column, int player){
 	int i, j, exec;
@@ -218,10 +226,13 @@ int isValidMove(char o[][N], int line, int column, int player){
 	return 0;
 }
 
-/* Entrées    :
- * Sorties    :
- * Variables  :
- * Traitement :
+/* Entrées    : o (un tableau 2D de caractères), line (un entier),
+				column (un entier), player (un entier)
+ * Sorties    : Le nombre de pierre retourner
+ * Variables  : i  (un entier), j  (un entier), cAlly (un caractère),
+ 				cEnemy (un caractère), cnt_reverse (un entier)
+ * Traitement :	Renverse les pierre sur l'othellier d'apres le coup
+ 				jouer précedement, et renvoi le nombre de pierre retourner
  */
 int reverseStone(char o[][N], int line, int column, int player){
 	int i,j;
@@ -366,10 +377,10 @@ int reverseStone(char o[][N], int line, int column, int player){
 	return cnt_reverse;
 }
 
-/* Entrées    :
- * Sorties    :
- * Variables  :
- * Traitement :
+/* Entrées    : o (un tableau 2D de caractères), player (un entier)
+ * Sorties    : un entier
+ * Variables  : cnt (un entier)
+ * Traitement : Renvoi 1 si il reste des coups à jouer sinon renvoi 0
  */
 int isOver(char o[][N], int player){
 	int cnt=0;
@@ -381,13 +392,13 @@ int isOver(char o[][N], int player){
 		}
 	}
 	if( cnt != 0 )
-	return 1;
+		return 1;
 
 	return 0;
 }
 
-/* Entrées    :
- * Sorties    :
+/* Entrées    : choice (un caractère), renderer (un moteur de rendu)
+ * Sorties    : 
  * Variables  :
  * Traitement :
  */
