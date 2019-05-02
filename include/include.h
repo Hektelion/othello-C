@@ -24,6 +24,15 @@
 #include "../lib/CUnit/Headers/Basic.h"
 
 //============================================
+//				STRUCTURE
+//============================================
+
+typedef struct{
+	int x;
+	int y;
+}coup;
+
+//============================================
 //				CONSTANTES
 //============================================
 
@@ -35,8 +44,11 @@
 
 //Constante graphique
 #define WIDTH_OTHELLO 800
-#define HEIGHT_OTHELLO 600
-#define NB_OPTION 6
+#define HEIGHT_OTHELLO 800
+#define NB_OPTION 3
+
+//Constante IA
+#define VAL_INF 100000
 
 //============================================
 //			BIBLIOTHEQUES PERSONNEL

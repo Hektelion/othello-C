@@ -10,10 +10,6 @@ int initDrawMENU(SDL_Renderer *renderer, SDL_Rect *title, SDL_Rect *menu, SDL_Re
 void drawMENU(SDL_Renderer *renderer, SDL_Rect title, SDL_Rect menu, SDL_Rect options[]);
 
 int initDrawGAME(SDL_Renderer *renderer);
-void drawGAME(SDL_Renderer *renderer, char o[][N], int size);
-
-void drawOPTION(SDL_Renderer *renderer);
-void drawRULE(SDL_Renderer *renderer);
-void drawCOMMAND(SDL_Renderer *renderer);
+void drawGAME(SDL_Renderer *renderer, char o[][N]);
 
 #endif // OTHELLO_DRAW_H

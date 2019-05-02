@@ -229,7 +229,7 @@ void test_reverseStone()
 	x = 4;
 	y = 2;
 	addStone(o, player, x, y);
-	CU_ASSERT( reverseStone(o, x, y, player) == 1);
+	CU_ASSERT( reverseStone(o, x, y, player) > 0);
 
 	player = nextPlayer(player);
 

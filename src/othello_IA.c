@@ -1,8 +1,11 @@
 #include "../include/othello_IA.h"
 #include "../include/include.h"
 
-int NBCOUPS_JOUES;
-
+/* Entrées    : a (un réel), b (un réel)
+ * Sorties    : Le plus grand element
+ * Variables  :
+ * Traitement : Calcul le plus grand élément en effectuant une comparaison
+ */
 float max(float a,float b)
 {
 	if (a > b)
@@ -11,6 +14,11 @@ float max(float a,float b)
 		return b;
 }
 
+/* Entrées    : a (un réel), b (un réel)
+ * Sorties    : Le plus petit element
+ * Variables  :
+ * Traitement : Calcul le plus petit élément en effectuant une comparaison
+ */
 float min(float a,float b)
 {
 	if (a < b)
@@ -19,213 +27,148 @@ float min(float a,float b)
 		return b;
 }
 
-/* retourne le nombre de cases vides dans Grille*/
-int CompteCasesVides(char *Grille)
-{
-	return ((Dimmax * Dimmax) -  NBCOUPS_JOUES);
-}
-
-int ValuerQuantitative(char *Grille)
-{
-	int NbpionsX,NbpionsO;
-
-	ComptePions(Grille , &NbpionsX , &NbpionsO);
-	return (NbpionsX - NbpionsO);
-}
-
-/*  C'est notre fonction isValidMove  */
-
-/*cette fonction rescence tous les coups valides pour le camp (camp)dans une liste chainee dont chaque maillon contient un coup*/
-int DonnetousLesCoupsValides(char *Grille,char camp,Lchaine** lcTete)
-{
-	int ievalue = 1;
-	char jevalue;
-	int compteur = 0;
-	Lchaine* lc;
-	(*lcTete) = NULL;
-
-	while (ievalue <= Dimmax)
-	{
-		for (jevalue = 'a'; (jevalue  < (Dimmax + 'a'));jevalue++)
-		{
-			if (coupValide(Grille,camp,ievalue,jevalue)== 1)
-			{
-				compteur++;
-				lc = (Lchaine*)malloc(sizeof(Lchaine));
-				(lc-> coup).pion = camp;
-				(lc-> coup).Numligne = ievalue;
-				(lc->coup).Nomcolonne = jevalue;
-				/* printf(" coup valide trouv� pour %c : (%c,%d) evalu� � : %d \n",camp,jevalue,ievalue,(lc->evaluation));*/
-				lc->suivant= *lcTete;
-				(*lcTete)= lc;
-			}
+/* Entrées    : o (un tableau 2D de caractères), copy_o (un tableau 2D de caractères)
+ * Sorties    :
+ * Variables  :
+ * Traitement :	copy le tableau o (source) dans le tableau copy_o (cible)
+ */
+void copy_othello(char o[][N], char copy_o[][N]){
+	for(int i=0 ; i<N ; i++){
+		for(int j=0 ; j<N ; j++){
+			copy_o[i][j] = o[i][j];
 		}
-		ievalue++;
 	}
-	return compteur;
 }
 
-float trouvecoupsimpleQuiMaximise(char *Grille,Bestcoup* coup)
-{
-	Lchaine*  maliste;
-	char *Grilledeteste;
-	int i;
-	float eval = -FLT_MAX,eval_temp;
-	Lchaine* lc;
+/* Entrées    : o (un tableau 2D de caractères), black_stone (un entier),
+				white_stone (un entier)
+ * Sorties    :
+ * Variables  :
+ * Traitement : Calcul le nombre de pierre blanche et noir
+ */
+void nb_stone(char o[][N], int *black_stone, int *white_stone){
+	black_stone = 0;
+	white_stone = 0;
 
-	int Nbcoupsvalides = DonnetousLesCoupsValides(Grille,'X',&maliste);
-	for (i = 1;i<= Nbcoupsvalides;i++)
-	{
-		Grilledeteste= (char*) malloc((Dimmax * Dimmax * sizeof(char)));
-		recopieGrille(Grilledeteste,Grille);
-		JoueLeCoup(&Grilledeteste,((maliste->coup).Numligne),((maliste->coup).Nomcolonne),'X');
-		eval_temp = evalue(Grilledeteste);
-		if(eval_temp > eval)
-		{
-			coup->Numligne = (maliste ->coup).Numligne;
-			coup->Nomcolonne = (maliste -> coup).Nomcolonne;
-			eval = eval_temp;
+	for(int i=0 ; i<N ; i++){
+		for(int j=0 ; j<N ; j++){
+			if(o[i][j] == BLACK)
+				black_stone++;
+			else if(o[i][j] == WHITE)
+				white_stone++;
 		}
-		lc= maliste;
-		maliste = maliste -> suivant;
-		free(lc);
-		free(Grilledeteste);
 	}
-	free(maliste);
-	return eval;
 }
 
-float trouvecoupsimpleQuiMinimise(char *Grille,Bestcoup* coup)
-{
-	char *Grilledeteste;
-	Lchaine*  maliste;
-	Lchaine* lc;
-	int i;
-	float eval = FLT_MAX,eval_temp;
+/* Entrées    : o (un tableau 2D de caractères)
+ * Sorties    : un entier
+ * Variables  :	black_stone (un entier), white_stone (un entier)
+ * Traitement : Calcul la difference entre black_stone et white_stone
+ 				à un signe près et la retourne
+ */
+int eval_quant(char o[][N]){
+	int black_stone;
+	int white_stone;
 
-	int Nbcoupsvalides = DonnetousLesCoupsValides(Grille,'O',&maliste);
-	for (i = 1;i<= Nbcoupsvalides;i++)
-	{
-		Grilledeteste= (char*) malloc((Dimmax * Dimmax * sizeof(char)));
-		recopieGrille(Grilledeteste,Grille);
-		JoueLeCoup(&Grilledeteste,(maliste->coup.Numligne),(maliste->coup.Nomcolonne),'O');
-		eval_temp = evalue(Grilledeteste);
-		if(eval_temp < eval)
-		{
-			coup -> Numligne = maliste ->coup.Numligne;
-			coup -> Nomcolonne = maliste ->coup.Nomcolonne;
-			eval = eval_temp;
+	nb_stone(o, &black_stone, &white_stone);
+
+	return (black_stone - white_stone);
+}
+
+/* Entrées    : o (un tableau 2D de caractères), player (un entier)
+ * Sorties    : cnt_move (un entier)
+ * Variables  : cnt_move (un entier)
+ * Traitement : Détermine le nombre de coup possible pour un joueur donné
+ 				et renvoi le resultat
+ */
+int get_nbMove(char o[][N], int player){
+	int cnt_move = 0;
+
+	for(int i=0 ; i<N ; i++){
+		for(int j=0 ; j<N ; j++){
+			if( (o[i][j] == BLANK) && isValidMove(o, i, j, player) )
+				cnt_move++;
 		}
-		lc= maliste;
-		maliste = maliste -> suivant;
-		free(lc);
-		free(Grilledeteste);
 	}
-	free(maliste);
-	return eval;
+
+	return cnt_move;
 }
 
-float TrouveMeilleurCoupSimple(char *Grille,char Camp,Bestcoup* coup)
-{
-	if(Camp == 'X')
-	return  (trouvecoupsimpleQuiMaximise(Grille,coup));
-	else
-	return  (trouvecoupsimpleQuiMinimise(Grille,coup));
-}
+/* Entrées    : o (un tableau 2D de caractères), c_possible (un tableau de coup)
+				player (un entier)
+ * Sorties    :
+ * Variables  : id (un entier)
+ * Traitement : Rempli un tableau de coup avec les coup possible pour un joueur
+ 				donné
+ */
+void get_validMove(char o[][N], coup c_possible[], int player){
+	int id=0;
 
-
-float trouvecoupalphabeta(char *Grille,char camp,int prof,float alpha,float beta,Bestcoup* coup)
-{
-	Lchaine* maliste;
-	Lchaine* lc;
-	char *Grilledeteste;
-	int i, Nbcoupsvalides;
-	Bestcoup coup_fils;
-	float new_alpha,new_beta,eval,eval_temp;
-
-	if(existeCoupPourCamp(Grille ,camp)== 1)
-	{
-		if(prof == 1)
-		{
-			eval =  (TrouveMeilleurCoupSimple(Grille, camp,coup));
-			return eval;
-		}
-		else
-		{
-			new_alpha = -FLT_MAX;
-			new_beta = FLT_MAX;
-			if(camp == 'X')
-			{
-				Nbcoupsvalides = DonnetousLesCoupsValides(Grille,'X',&maliste);
-				for (i = 1;i<= Nbcoupsvalides;i++)
-				{
-					Grilledeteste= (char*) malloc((Dimmax * Dimmax * sizeof(char)));
-					recopieGrille(Grilledeteste,Grille);
-
-					JoueLeCoup(&Grilledeteste,(maliste->coup.Numligne),(maliste->coup.Nomcolonne),camp);
-					eval_temp = (trouvecoupalphabeta(Grilledeteste,(adverse(camp)),(prof - 1),(max(alpha,new_alpha)),beta,&coup_fils));
-					if(eval_temp > new_alpha)
-
-					{
-						new_alpha = eval_temp;
-						coup -> Numligne = maliste->coup.Numligne;
-						coup -> Nomcolonne = maliste->coup.Nomcolonne;
-					}
-					if(new_alpha > beta)/*coupe alpha*/
-					{
-						free(maliste);
-						free(Grilledeteste);
-						break;
-					}
-					else
-					{
-
-						lc= maliste;
-						maliste = (maliste->suivant);
-						free(lc);
-						free(Grilledeteste);
-					}
-				}
-				return new_alpha;
-			}
-			else
-			{
-				Nbcoupsvalides = DonnetousLesCoupsValides(Grille,'O',&maliste);
-				for (i = 1;i<= Nbcoupsvalides;i++)
-				{
-					Grilledeteste= (char*) malloc((Dimmax * Dimmax * sizeof(char)));
-					recopieGrille(Grilledeteste,Grille);
-
-					JoueLeCoup(&Grilledeteste,(maliste->coup.Numligne),(maliste->coup.Nomcolonne),camp);
-					eval_temp = (trouvecoupalphabeta(Grilledeteste,(adverse(camp)),(prof - 1),alpha,(min(new_beta,beta)),&coup_fils));
-					if(eval_temp < new_beta)
-					{
-						new_beta = eval_temp;
-						coup -> Numligne = maliste->coup.Numligne;
-						coup -> Nomcolonne = maliste->coup.Nomcolonne;
-					}
-					if(alpha > new_beta)/*coupe beta*/
-					{
-						free(maliste);
-						free(Grilledeteste);
-						break;
-					}
-					else
-					{
-
-						lc= maliste;
-						maliste = (maliste->suivant);
-						free(lc);
-						free(Grilledeteste);
-					}
-				}
-				return new_beta;
+	for(int i=0 ; i<N ; i++){
+		for(int j=0 ; j<N ; j++){
+			if( (o[i][j] == BLANK) && (isValidMove(o, i, j, player)) ){
+				c_possible[id].x = i;
+				c_possible[id].y = j;
+				id++;
 			}
 		}
 	}
-	else
-	{
-		eval = evalue(Grille);
-		return eval;
+}
+
+/* Entrées    : o (un tableau 2D de caractères), depth (un entier),
+				player (un entier)
+ * Sorties    : la valeur évalué
+ * Variables  : copy_o (un tableau 2D de caractères), value (un entier),
+ 				nbMove (un entier), c_possible (un tableau de coup)
+ * Traitement : 
+ */
+float minimax(char o[][N], int depth, int player){
+	char copy_o[N][N];
+	float value;
+	int nbMove;
+	coup *c_possible;
+
+	//Cas terminal
+	if( depth <= 0 || !isOver(o, player) ){
+		return (float)eval_quant(o);
 	}
+
+	nbMove = get_nbMove(o, player);
+	c_possible = malloc(nbMove * sizeof(coup));
+	get_validMove(o, c_possible, player);
+
+	if(player){	//MAXIMUM
+		value = -VAL_INF;
+		for(int i=0 ; i<nbMove ; i++){
+			//Fait une copie temporaire de l'othellier passer en parametre
+			copy_othello(o, copy_o);
+
+			//Ajoute et effectue le Retournement sur l'othelier
+			addStone(copy_o, c_possible[i].x, c_possible[i].y, player);
+			reverseStone(copy_o, c_possible[i].x, c_possible[i].y, player);
+
+			//Determine le max entre value et le retour de minimax()
+			value = max(value, minimax(copy_o, depth-1, nextPlayer(player)));
+		}
+	}
+	else{	//MINIMUM
+		value = VAL_INF;
+		for(int i=0 ; i<nbMove ; i++){
+			//Fait une copie temporaire de l'othellier passer en parametre
+			copy_othello(o, copy_o);
+
+			//Ajoute et effectue le Retournement sur l'othelier
+			addStone(copy_o, c_possible[i].x, c_possible[i].y, player);
+			reverseStone(copy_o, c_possible[i].x, c_possible[i].y, player);
+
+			//Determine le min entre value et le retour de minimax()
+			value = min(value, minimax(copy_o, depth-1, nextPlayer(player)));
+		}
+	}
+
+	//Libère la mémoire allouée
+	free(c_possible);
+
+	return value;
+
 }

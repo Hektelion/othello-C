@@ -1,6 +1,11 @@
 #include "../include/othello_logic.h"
 #include "../include/include.h"
 
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int initOthello(char o[][N]){
 	//INITIALISATION A VIDE
 	//fprintf(stdout, "Initialisation à vide\n");
@@ -19,6 +24,12 @@ int initOthello(char o[][N]){
 
 	return 0;
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int printOthello(char o[][N]){
 
 	printf("\n");
@@ -47,14 +58,31 @@ int printOthello(char o[][N]){
 
 	return 0;
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int isInOthello(int x, int y){
 	return ( (y >= 0) && (y < N) && (x >= 0) && (x < N) );
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int nextPlayer(int player){
 	return( player+1 )%2;
 }
 
-int addStone(char o[][N], int player, int x, int y){
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
+int addStone(char o[][N], int x, int y, int player){
 	//ATTRIBUTION DES PIONS ALLY ET ENEMY
 	if( isInOthello(x,y) ){
 		if(player == 0){
@@ -69,6 +97,12 @@ int addStone(char o[][N], int player, int x, int y){
 		return -1;
 	}
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int delStone(char o[][N], int x, int y){
 	if( isInOthello(x,y) ){
 		o[x][y] = BLANK;
@@ -78,6 +112,12 @@ int delStone(char o[][N], int x, int y){
 		return -1;
 	}
 }
+
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int isValidMove(char o[][N], int line, int column, int player){
 	int i, j, exec;
 	char cAlly, cEnemy;
@@ -178,6 +218,11 @@ int isValidMove(char o[][N], int line, int column, int player){
 	return 0;
 }
 
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int reverseStone(char o[][N], int line, int column, int player){
 	int i,j;
 	char cAlly, cEnemy;
@@ -316,22 +361,23 @@ int reverseStone(char o[][N], int line, int column, int player){
 		}
 	}
 
-	//SI IL N'Y A EU AUCUN RETOURNEMENT
-	if( cnt_reverse == 0 ) return 0;
+	//fprintf(stdout, "cnt_reverse = %d\n", cnt_reverse);
 
-	return 1;
+	return cnt_reverse;
 }
-int chooseMove(){
 
-}
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
 int isOver(char o[][N], int player){
 	int cnt=0;
 
 	for(int i=0 ; i<N ; i++){
 		for(int j=0 ; j<N ; j++){
-			if( o[i][j] == BLANK )
-			if( isValidMove(o, i, j, player) == 1)
-			cnt++;
+			if( (o[i][j] == BLANK) && isValidMove(o, i, j, player) )
+				cnt++;
 		}
 	}
 	if( cnt != 0 )
@@ -340,6 +386,157 @@ int isOver(char o[][N], int player){
 	return 0;
 }
 
-int playOthello(){
+/* Entrées    :
+ * Sorties    :
+ * Variables  :
+ * Traitement :
+ */
+int playOthello(char choice, SDL_Renderer *renderer){
+	char o[N][N];
+    int player = 0;
+    int cnt = 0;
+    int x,y;
+    SDL_Rect **carreau;
+    int ecart=50;
+    SDL_Point point;
 
+	int nbMove;
+
+    //Case du plateau
+    carreau = malloc(N * sizeof(SDL_Rect*));
+    for(int i=0 ; i<N ; i++)
+        carreau[i] = malloc(N * sizeof(SDL_Rect));
+
+    for(int i=0 ; i<N ; i++){
+        for(int j=0 ; j<N ; j++){
+            carreau[i][j].h = (HEIGHT_OTHELLO-(2*ecart))/N;
+            carreau[i][j].w = (WIDTH_OTHELLO-(2*ecart))/N;
+            carreau[i][j].x = ecart + j*(WIDTH_OTHELLO-(2*ecart))/N;
+            carreau[i][j].y = ecart + i*(HEIGHT_OTHELLO-(2*ecart))/N;
+        }
+    }
+
+    initOthello(o);
+    do{
+        //printOthello(o);
+        drawGAME(renderer, o);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+        for(int i=0 ; i<N ; i++){
+            for(int j=0 ; j<N ; j++){
+                //printf("h:%d , w:%d , x:%d , y:%d\n", carreau[i][j].h, carreau[i][j].w, carreau[i][j].x, carreau[i][j].y);
+                SDL_RenderFillRect(renderer, &carreau[i][j]);
+            }
+        }
+        if( player == 0 || choice == '0' ){
+            do{
+                SDL_Event ev;
+
+                //Mise a jour des événement
+                while ( SDL_PollEvent(&ev) ) // Nous traitons les événements de la queue
+                {
+                    switch (ev.type) {
+	                    case SDL_MOUSEMOTION:
+	                        point.x = ev.motion.x;
+	                        point.y = ev.motion.y;
+	                        break;
+	                    case SDL_MOUSEBUTTONDOWN:
+	                        for(int i=0 ; i<N ; i++){
+	                            for(int j=0 ; j<N ; j++){
+	                                if(SDL_PointInRect(&point, &carreau[i][j])){
+	                                    x = i;
+	                                    y = j;
+	                                }
+	                            }
+	                        }
+	                        break;
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+								case SDL_SCANCODE_ESCAPE:
+									return 0;
+									break;
+								default:
+									break;
+							}
+							break;
+						default:
+							break;
+                    }
+                }
+            }
+            while(!isValidMove(o, x, y, player));
+            //chooseMove(o, &x, &y, player);
+            addStone(o, x, y, player);
+            reverseStone(o, x, y, player);
+            player = nextPlayer(player);
+        }
+        else{
+			nbMove = get_nbMove(o, player);
+			coup c_possible[nbMove];
+			float eval[nbMove];
+			int max = -VAL_INF;
+
+			get_validMove(o, c_possible, player);
+
+			for(int id_move=0 ; id_move < nbMove ; id_move++){
+				eval[id_move] = minimax(o, 3, player);
+			}
+
+			for(int id_move=0 ; id_move < nbMove ; id_move++){
+				if(eval[id_move] > max){
+					max = eval[id_move];
+					x = c_possible[id_move].x;
+					y = c_possible[id_move].y;
+				}
+			}
+
+			//fprintf(stderr, "coup : (%d,%d)\n", x, y);
+
+			addStone(o, x, y, player);
+			reverseStone(o, x, y, player);
+
+            player = nextPlayer(player);
+
+        }
+    }
+    while(isOver(o, player));
+    for(int i=0 ; i<N ; i++){
+        for(int j=0 ; j<N ; j++){
+            if( o[i][j] == WHITE )
+                cnt++;
+            else if( o[i][j] == BLACK )
+                cnt--;
+        }
+    }
+    if( cnt > 0 )
+        printf("le joueur 1 gagne\n");
+    else if( cnt < 0)
+        printf("le joueur 2 gagne\n");
+    else
+        printf("match nul\n");
+
+    if( carreau != NULL ){
+        for( int i=0 ; i<N ; i++ ){
+			if( carreau[i] != NULL ){
+                //fprintf(stdout,"Libération carreau[%d] \n", i);
+                free( carreau[i] );
+            }
+            else{
+                fprintf(stderr,"La mémoire de carreau[%d] est déja libérée \n", i);
+            }
+		}
+        if( carreau != NULL ){
+            //fprintf(stdout,"Libération de carreau \n");
+            free( carreau );
+        }
+        else{
+            fprintf(stderr,"La mémoire de carreau est déja libérée \n");
+        }
+    }
+    else{
+        fprintf(stderr,"La mémoire de carreau[][] est déja libérée \n");
+    }
+
+	return 0;
+
+    //freeOthello(&o, N);
 }

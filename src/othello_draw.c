@@ -1,8 +1,11 @@
 #include "../include/othello_draw.h"
 #include "../include/include.h"
 
-/*
- *
+/* Entrées    : renderer (un moteur de rendu)
+ * Sorties    : Le code d'erreur de la fonction
+ * Variables  : width (un entier), heigth (un entier)
+ * Traitement : Cette fonction initialise les elements
+ 				utilisé dans l'intro
  */
 int initDrawINTRO(SDL_Renderer *renderer){
 	int width;
@@ -15,8 +18,12 @@ int initDrawINTRO(SDL_Renderer *renderer){
 
 	return EXIT_SUCCESS;
 }
-/*
- *
+
+/* Entrées    : renderer (un moteur de rendu)
+ * Sorties    :
+ * Variables  :
+ * Traitement : Dessine à l'écran l'introduction du jeu
+ 				puis effectue une pause
  */
 void drawINTRO(SDL_Renderer *renderer){
 
@@ -27,8 +34,12 @@ void drawINTRO(SDL_Renderer *renderer){
 
 }
 
-/*
- *
+/* Entrées    : renderer (un moteur de rendu), title (un rectangle),
+			 	menu (un rectangle), options (un tableau de rectangle)
+ * Sorties    : Le code d'erreur de la fonction
+ * Variables  : width (un entier), heigth (un entier)
+ * Traitement : Cette fonction initialise les elements
+ 				utilisé dans le dessin du menu
  */
 int initDrawMENU(SDL_Renderer *renderer, SDL_Rect *title, SDL_Rect *menu, SDL_Rect options[]){
 	int width;
@@ -59,6 +70,13 @@ int initDrawMENU(SDL_Renderer *renderer, SDL_Rect *title, SDL_Rect *menu, SDL_Re
 
 	return EXIT_SUCCESS;
 }
+
+/* Entrées    : renderer (un moteur de rendu), title (un rectangle),
+			 	menu (un rectangle), options (un tableau de rectangle)
+ * Sorties    :
+ * Variables  :
+ * Traitement : Cette fonction dessine les éléments du menu
+ */
 void drawMENU(SDL_Renderer *renderer, SDL_Rect title, SDL_Rect menu, SDL_Rect options[]){
 
 	//Background Blanc
@@ -77,8 +95,11 @@ void drawMENU(SDL_Renderer *renderer, SDL_Rect title, SDL_Rect menu, SDL_Rect op
     SDL_RenderPresent(renderer);
 }
 
-/*
- *
+/* Entrées    : renderer (un moteur de rendu)
+ * Sorties    : Le code d'erreur de la fonction
+ * Variables  : width (un entier), heigth (un entier)
+ * Traitement : Cette fonction initialise les elements
+ 				utilisé dans le dessin du plateau
  */
 int initDrawGAME(SDL_Renderer *renderer){
 	int width;
@@ -91,23 +112,29 @@ int initDrawGAME(SDL_Renderer *renderer){
 
 	return EXIT_SUCCESS;
 }
-/*
- *
+
+/* Entrées    : renderer (un moteur de rendu), o (un tableau 2D de caractères)
+ * Sorties    :
+ * Variables  : font (un rectangle), othello (un rectangle)
+ 				othello_lines (un tableau 2D de point)
+				ecart (un entier), stone (un tableau 2D de point),
+				pion (un entier)
+ * Traitement : Cette fonction dessine les éléments du jeu
  */
-void drawGAME(SDL_Renderer *renderer, char o[][N], int size){
+void drawGAME(SDL_Renderer *renderer, char o[][N]){
 	SDL_Rect font;
     SDL_Rect othello;
-    SDL_Point othello_lines[(size-1)*4];
+    SDL_Point othello_lines[(N-1)*4];
     int ecart=50;
-    SDL_Point stone[size][size];
+    SDL_Point stone[N][N];
     SDL_Rect pion;
 
 	//Background Blanc
 	SDL_SetRenderDrawColor(renderer, 255,255,255,255);
 	SDL_RenderClear(renderer);
 
-    pion.h = ((HEIGHT_OTHELLO-(2*ecart))/size)/2;
-    pion.w = ((WIDTH_OTHELLO-(2*ecart))/size)/2;
+    pion.h = ((HEIGHT_OTHELLO-(2*ecart))/N)/2;
+    pion.w = ((WIDTH_OTHELLO-(2*ecart))/N)/2;
 
     font.x = 0;
     font.y = 0;
@@ -125,46 +152,46 @@ void drawGAME(SDL_Renderer *renderer, char o[][N], int size){
     SDL_SetRenderDrawColor(renderer, 39, 174, 96, 255);
     SDL_RenderFillRect(renderer, &othello);
 
-    for(int i=0 ; i<(size-1)*2 ; i=i+2){
+    for(int i=0 ; i<(N-1)*2 ; i=i+2){
         othello_lines[i].x = ecart;
-        othello_lines[i].y = ecart + (1 + (i/2))*( (HEIGHT_OTHELLO-(2*ecart))/size );
+        othello_lines[i].y = ecart + (1 + (i/2))*( (HEIGHT_OTHELLO-(2*ecart))/N );
         othello_lines[i+1].x = WIDTH_OTHELLO-ecart;
-        othello_lines[i+1].y = ecart + (1 + (i/2))*( (HEIGHT_OTHELLO-(2*ecart))/size );
+        othello_lines[i+1].y = ecart + (1 + (i/2))*( (HEIGHT_OTHELLO-(2*ecart))/N );
         //printf("%d\n", i);
     }
 
-    for(int i=(size-1)*2 ; i<(size-1)*4 ; i=i+2){
-        othello_lines[i].x = ecart + (1 + ((i - (size-1)*2 )/2))*( (WIDTH_OTHELLO-(2*ecart))/size );
+    for(int i=(N-1)*2 ; i<(N-1)*4 ; i=i+2){
+        othello_lines[i].x = ecart + (1 + ((i - (N-1)*2 )/2))*( (WIDTH_OTHELLO-(2*ecart))/N );
         othello_lines[i].y = ecart;
-        othello_lines[i+1].x = ecart + (1 + ((i - (size-1)*2 )/2))*( (WIDTH_OTHELLO-(2*ecart))/size );
+        othello_lines[i+1].x = ecart + (1 + ((i - (N-1)*2 )/2))*( (WIDTH_OTHELLO-(2*ecart))/N );
         othello_lines[i+1].y = HEIGHT_OTHELLO - ecart;
         //printf("%d\n", i);
     }
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    for(int i=0 ; i<(size-1)*4 ; i=i+2){
+    for(int i=0 ; i<(N-1)*4 ; i=i+2){
         SDL_RenderDrawLine(renderer, othello_lines[i].x, othello_lines[i].y, othello_lines[i+1].x, othello_lines[i+1].y);
     }
 
-    for(int i=0 ; i<size ; i++){
-        for(int j=0 ; j<size ; j++){
-            stone[i][j].x = ecart + ((WIDTH_OTHELLO-(2*ecart))/size)/2 + j * (WIDTH_OTHELLO-(2*ecart))/size;
-            stone[i][j].y = ecart + ((HEIGHT_OTHELLO-(2*ecart))/size)/2 + i * (HEIGHT_OTHELLO-(2*ecart))/size;
+    for(int i=0 ; i<N ; i++){
+        for(int j=0 ; j<N ; j++){
+            stone[i][j].x = ecart + ((WIDTH_OTHELLO-(2*ecart))/N)/2 + j * (WIDTH_OTHELLO-(2*ecart))/N;
+            stone[i][j].y = ecart + ((HEIGHT_OTHELLO-(2*ecart))/N)/2 + i * (HEIGHT_OTHELLO-(2*ecart))/N;
         }
     }
 
-    for(int i=0 ; i<size ; i++){
-        for(int j=0 ; j<size ; j++){
+    for(int i=0 ; i<N ; i++){
+        for(int j=0 ; j<N ; j++){
             if(o[i][j] == WHITE){
                 SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-                pion.x = stone[i][j].x - ((WIDTH_OTHELLO-(2*ecart))/size)/4;
-                pion.y = stone[i][j].y - ((HEIGHT_OTHELLO-(2*ecart))/size)/4;
+                pion.x = stone[i][j].x - ((WIDTH_OTHELLO-(2*ecart))/N)/4;
+                pion.y = stone[i][j].y - ((HEIGHT_OTHELLO-(2*ecart))/N)/4;
                 SDL_RenderFillRect(renderer, &pion);
             }
             else if(o[i][j] == BLACK){
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                pion.x = stone[i][j].x - ((WIDTH_OTHELLO-(2*ecart))/size)/4;
-                pion.y = stone[i][j].y - ((HEIGHT_OTHELLO-(2*ecart))/size)/4;
+                pion.x = stone[i][j].x - ((WIDTH_OTHELLO-(2*ecart))/N)/4;
+                pion.y = stone[i][j].y - ((HEIGHT_OTHELLO-(2*ecart))/N)/4;
                 SDL_RenderFillRect(renderer, &pion);
             }
             else{
@@ -174,16 +201,4 @@ void drawGAME(SDL_Renderer *renderer, char o[][N], int size){
     }
 
     SDL_RenderPresent(renderer);
-}
-
-
-//INUTILE
-void drawOPTION(SDL_Renderer *renderer){
-
-}
-void drawRULE(SDL_Renderer *renderer){
-
-}
-void drawCOMMAND(SDL_Renderer *renderer){
-
 }

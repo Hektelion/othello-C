@@ -1,9 +1,14 @@
 #include "../include/include.h"
 
+/* Entrées :
+ * Sorties :
+ * Variables :
+ */
 int main(){
 	//============================================
 	//				  DECLARATION
 	//============================================
+	
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
     SDL_Rect options[6];
@@ -27,11 +32,13 @@ int main(){
 		return EXIT_FAILURE;
 	}
 
+	/*
 	police = TTF_OpenFont("font/honor.ttf", 22);
 	if(police == NULL){
     	printf("TTF_OpenFont: %s\n", TTF_GetError());
     	return EXIT_FAILURE;
 	}
+	*/
 
 	//fprintf(stdout, "FIN INITIALISATION\n");
 
@@ -46,7 +53,7 @@ int main(){
 		initDrawMENU(renderer, &title, &menu, options);
 		drawMENU(renderer, title, menu, options);
 
-		texte = TTF_RenderText_Blended(police, "Salut les Zér0s !", c_Noir);
+		//texte = TTF_RenderText_Blended(police, "Salut les Zér0s !", c_Noir);
 
         SDL_Event event;
 
@@ -65,23 +72,10 @@ int main(){
                     }
                     else if(SDL_PointInRect(&mouse, &options[1]) == SDL_TRUE){
                         fprintf(stdout, "Lancement d'une partie joueur contre IA\n");   //LOG
-                        //playOthello('1', renderer, config);
+                        playOthello('1', renderer);
                     }
 					else if(SDL_PointInRect(&mouse, &options[2]) == SDL_TRUE){
-                        fprintf(stdout, "Lancement des options\n");   //LOG
-						drawOPTION(renderer);
-
-                    }
-                    else if(SDL_PointInRect(&mouse, &options[3]) == SDL_TRUE){
-                        fprintf(stdout, "Affichage des règles du jeu\n");   //LOG
-                        drawRULE(renderer);
-                    }
-                    else if(SDL_PointInRect(&mouse, &options[4]) == SDL_TRUE){
-                        fprintf(stdout, "Affichage des commandes du jeu\n");   //LOG
-                        drawCOMMAND(renderer);
-                    }
-                    else if(SDL_PointInRect(&mouse, &options[5]) == SDL_TRUE){
-                        fprintf(stdout, "L'application quitte\n");   //LOG
+						fprintf(stdout, "L'application quitte\n");   //LOG
                         choice = 'q';
                     }
                 break;

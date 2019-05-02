@@ -6,18 +6,13 @@
 float max(float a,float b);
 float min(float a,float b);
 
-int CompteCasesVides(char* Grille);
+void copy_othello(char o[][N], char copy_o[][N]);
+void nb_stone(char o[][N], int *black_stone, int *white_stone);
+int eval_quant(char o[][N]);
 
-int ValuerQuantitative(char* Grille);
+int get_nbMove(char o[][N], int player);
+void get_validMove(char o[][N], coup c_possible[], int player);
 
-int DonnetousLesCoupsValides(char* Grille,char camp,Lchaine** lcTete);
-
-float trouvecoupsimpleQuiMaximise(char*Grille,Bestcoup* coup);
-
-float trouvecoupsimpleQuiMinimise(char*Grille,Bestcoup* coup);
-
-float TrouveMeilleurCoupSimple(char* Grille,char Camp,Bestcoup* coup);
-
-float trouvecoupalphabeta(char*Grille,char camp,int prof,float alpha,float beta,Bestcoup* coup);
+float minimax(char o[][N], int depth, int player);
 
 #endif // OTHELLO_IA_H
