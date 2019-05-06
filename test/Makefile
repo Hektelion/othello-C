@@ -2,9 +2,9 @@
 #Réaliser par BESSAI Sofiane
 
 CC = gcc
-LDFLAGS = `sdl2-config --libs --cflags` -lSDL_ttf -lcunit
+LDFLAGS = `sdl2-config --libs --cflags` -lSDL_ttf -lcunit -lm
 CFLAGS = -W -Wall
-LINK = ../obj/othello_logic.o ../obj/othello_draw.o ../obj/othello_system.o
+LINK = ../obj/othello_logic.o ../obj/othello_draw.o ../obj/othello_system.o ../obj/othello_IA.o
 EXEC = test
 INCLUDES =
 SRC =
@@ -21,7 +21,7 @@ all : $(EXEC)
 # Cible
 # Dépendances
 # Actions
-$(EXEC) : ./obj/test_logic.o ./obj/test_draw.o ./obj/test_system.o ./obj/main.o
+$(EXEC) : ./obj/test_logic.o ./obj/test_draw.o ./obj/test_system.o ./obj/test_IA.o ./obj/main.o
 	@echo "Création de l'éxecutable"
 	@$(CC) -o $@ $^ $(LINK) $(LDFLAGS)
 	@echo "Création de l'éxecutable : OK"
@@ -54,6 +54,14 @@ $(EXEC) : ./obj/test_logic.o ./obj/test_draw.o ./obj/test_system.o ./obj/main.o
 # Dépendances
 # Actions
 ./obj/test_system.o : ./src/test_system.c
+	@echo Création de $*.o
+	$(CC) -o $@ -c $< $(CFLAGS)
+	@echo Création de $*.o : OK
+
+# Cible
+# Dépendances
+# Actions
+./obj/test_IA.o : ./src/test_IA.c
 	@echo Création de $*.o
 	$(CC) -o $@ -c $< $(CFLAGS)
 	@echo Création de $*.o : OK

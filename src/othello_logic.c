@@ -98,7 +98,7 @@ int addStone(char o[][N], int x, int y, int player){
 		return 0;
 	}
 	else{
-		fprintf(stderr, "Erreur addStone : le coup (%d,%d) n'est pas dans le plateau\n", x, y);
+		//fprintf(stderr, "Erreur addStone : le coup (%d,%d) n'est pas dans le plateau\n", x, y);
 		return -1;
 	}
 }
@@ -114,7 +114,7 @@ int delStone(char o[][N], int x, int y){
 		return 0;
 	}
 	else{
-		fprintf(stderr, "Erreur delStone : le coup (%d,%d) n'est pas dans le plateau\n", x, y);
+		//fprintf(stderr, "Erreur delStone : le coup (%d,%d) n'est pas dans le plateau\n", x, y);
 		return -1;
 	}
 }
@@ -391,6 +391,15 @@ int isOver(char o[][N], int player){
 				cnt++;
 		}
 	}
+	/*
+	for(int i=0 ; i<N ; i++){
+		for(int j=0 ; j<N ; j++){
+			if( (o[i][j] == BLACK) && isValidMove(o, i, j, nextPlayer(player)) )
+				cnt++;
+		}
+	}
+	*/
+
 	if( cnt != 0 )
 		return 1;
 
@@ -398,46 +407,41 @@ int isOver(char o[][N], int player){
 }
 
 /* Entrées    : choice (un caractère), renderer (un moteur de rendu)
- * Sorties    : 
- * Variables  :
- * Traitement :
+ * Sorties    : Le code d'erreur de la fonction
+ * Variables  : o (un tableau 2D de caractères), player (un entier),
+ 				cnt (un entier), x (un entier), y (un entier),
+				carreau (un tableau 2D de rectangle), point (un point)
+ * Traitement : Lancement d'une partie d'othello, le type de partie differe
+ 				en fonction de la valeur de choice.
+				 - '0' : Partie joueur contre joueur
+				 - '1' : Partie joueur contre IA
+				Elle affiche à l'écran la partie il suffit de cliquer sur l'écran
+				pour jouer.
  */
 int playOthello(char choice, SDL_Renderer *renderer){
 	char o[N][N];
     int player = 0;
     int cnt = 0;
     int x,y;
-    SDL_Rect **carreau;
-    int ecart=50;
+    SDL_Rect carreau[N][N];
     SDL_Point point;
 
 	int nbMove;
 
-    //Case du plateau
-    carreau = malloc(N * sizeof(SDL_Rect*));
-    for(int i=0 ; i<N ; i++)
-        carreau[i] = malloc(N * sizeof(SDL_Rect));
-
-    for(int i=0 ; i<N ; i++){
-        for(int j=0 ; j<N ; j++){
-            carreau[i][j].h = (HEIGHT_OTHELLO-(2*ecart))/N;
-            carreau[i][j].w = (WIDTH_OTHELLO-(2*ecart))/N;
-            carreau[i][j].x = ecart + j*(WIDTH_OTHELLO-(2*ecart))/N;
-            carreau[i][j].y = ecart + i*(HEIGHT_OTHELLO-(2*ecart))/N;
-        }
-    }
-
     initOthello(o);
+
     do{
-        //printOthello(o);
-        drawGAME(renderer, o);
+		initDrawGAME(renderer, carreau);
+        drawGAME(renderer, o, player);
+		//printOthello(o);
         SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+
         for(int i=0 ; i<N ; i++){
             for(int j=0 ; j<N ; j++){
-                //printf("h:%d , w:%d , x:%d , y:%d\n", carreau[i][j].h, carreau[i][j].w, carreau[i][j].x, carreau[i][j].y);
                 SDL_RenderFillRect(renderer, &carreau[i][j]);
             }
         }
+
         if( player == 0 || choice == '0' ){
             do{
                 SDL_Event ev;
@@ -475,7 +479,6 @@ int playOthello(char choice, SDL_Renderer *renderer){
                 }
             }
             while(!isValidMove(o, x, y, player));
-            //chooseMove(o, &x, &y, player);
             addStone(o, x, y, player);
             reverseStone(o, x, y, player);
             player = nextPlayer(player);
@@ -489,7 +492,7 @@ int playOthello(char choice, SDL_Renderer *renderer){
 			get_validMove(o, c_possible, player);
 
 			for(int id_move=0 ; id_move < nbMove ; id_move++){
-				eval[id_move] = minimax(o, 3, player);
+				eval[id_move] = minimax(o, 4, player);
 			}
 
 			for(int id_move=0 ; id_move < nbMove ; id_move++){
@@ -500,8 +503,6 @@ int playOthello(char choice, SDL_Renderer *renderer){
 				}
 			}
 
-			//fprintf(stderr, "coup : (%d,%d)\n", x, y);
-
 			addStone(o, x, y, player);
 			reverseStone(o, x, y, player);
 
@@ -510,6 +511,7 @@ int playOthello(char choice, SDL_Renderer *renderer){
         }
     }
     while(isOver(o, player));
+
     for(int i=0 ; i<N ; i++){
         for(int j=0 ; j<N ; j++){
             if( o[i][j] == WHITE )
@@ -518,36 +520,17 @@ int playOthello(char choice, SDL_Renderer *renderer){
                 cnt--;
         }
     }
-    if( cnt > 0 )
-        printf("le joueur 1 gagne\n");
-    else if( cnt < 0)
-        printf("le joueur 2 gagne\n");
-    else
-        printf("match nul\n");
 
-    if( carreau != NULL ){
-        for( int i=0 ; i<N ; i++ ){
-			if( carreau[i] != NULL ){
-                //fprintf(stdout,"Libération carreau[%d] \n", i);
-                free( carreau[i] );
-            }
-            else{
-                fprintf(stderr,"La mémoire de carreau[%d] est déja libérée \n", i);
-            }
-		}
-        if( carreau != NULL ){
-            //fprintf(stdout,"Libération de carreau \n");
-            free( carreau );
-        }
-        else{
-            fprintf(stderr,"La mémoire de carreau est déja libérée \n");
-        }
-    }
+    if( cnt > 0 ){
+		printf("le joueur 1 gagne\n");
+	}
+    else if( cnt < 0){
+		printf("le joueur 2 gagne\n");
+	}
     else{
-        fprintf(stderr,"La mémoire de carreau[][] est déja libérée \n");
-    }
+		printf("match nul\n");
+	}
 
 	return 0;
 
-    //freeOthello(&o, N);
 }

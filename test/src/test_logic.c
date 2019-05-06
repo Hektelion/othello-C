@@ -14,7 +14,7 @@ static char o[N][N];
 /* Fonction d'initialisation de la suite 0
  * retourne 0 en cas de succes, sinon -1
  */
-int init_suite0(void)
+int init_logic_suite0(void)
 {
 	return 0;
 }
@@ -22,7 +22,7 @@ int init_suite0(void)
 /* Fonction de nettoyage de la suite 0
  * retourne 0 en cas de succes, sinon -1
  */
-int clean_suite0(void)
+int clean_logic_suite0(void)
 {
 	return 0;
 }
@@ -30,7 +30,7 @@ int clean_suite0(void)
 /* Fonction d'initialisation de la suite 1
  * retourne 0 en cas de succes, sinon -1
  */
-int init_suite1(void)
+int init_logic_suite1(void)
 {
 	return 0;
 }
@@ -38,7 +38,7 @@ int init_suite1(void)
 /* Fonction de nettoyage de la suite 1
  * retourne 0 en cas de succes, sinon -1
  */
-int clean_suite1(void)
+int clean_logic_suite1(void)
 {
 	return 0;
 }
@@ -46,7 +46,7 @@ int clean_suite1(void)
 /* Fonction d'initialisation de la suite 2
  * retourne 0 en cas de succes, sinon -1
  */
-int init_suite2(void)
+int init_logic_suite2(void)
 {
 	return 0;
 }
@@ -54,7 +54,7 @@ int init_suite2(void)
 /* Fonction de nettoyage de la suite 2
  * retourne 0 en cas de succes, sinon -1
  */
-int clean_suite2(void)
+int clean_logic_suite2(void)
 {
 	return 0;
 }
@@ -62,7 +62,7 @@ int clean_suite2(void)
 /* Fonction d'initialisation de la suite 3
  * retourne 0 en cas de succes, sinon -1
  */
-int init_suite3(void)
+int init_logic_suite3(void)
 {
 	return 0;
 }
@@ -70,7 +70,7 @@ int init_suite3(void)
 /* Fonction de nettoyage de la suite 3
  * retourne 0 en cas de succes, sinon -1
  */
-int clean_suite3(void)
+int clean_logic_suite3(void)
 {
 	return 0;
 }
@@ -78,6 +78,15 @@ int clean_suite3(void)
 //TEST UNITAIRE
 
 //Test couche 0
+
+/*
+ *
+ *
+ */
+void test_printOthello()
+{
+	CU_ASSERT( printOthello(o) == 0 );
+}
 
 /*
  *
@@ -132,25 +141,25 @@ void test_addStone()
 
 	x = 4;
 	y = 5;
-	CU_ASSERT( addStone(o, player, x, y) == 0);
+	CU_ASSERT( addStone(o, x, y, player) == 0);
 
 	player = nextPlayer(player);
 
 	x = 6;
 	y = 7;
-	CU_ASSERT( addStone(o, player, x, y) == 0);
+	CU_ASSERT( addStone(o, x, y, player) == 0);
 
 	player = nextPlayer(player);
 
 	x = 7;
 	y = 9;
-	CU_ASSERT( addStone(o, player, x, y) == -1);
+	CU_ASSERT( addStone(o, x, y, player) == -1);
 
 	player = nextPlayer(player);
 
 	x = 10;
 	y = 7;
-	CU_ASSERT( addStone(o, player, x, y) == -1);
+	CU_ASSERT( addStone(o, x, y, player) == -1);
 
 }
 
@@ -247,15 +256,6 @@ void test_reverseStone()
 }
 
 //Test couche 2
-
-/*
- *
- *
- */
-void test_chooseMove()
-{
-
-}
 
 /*
  *

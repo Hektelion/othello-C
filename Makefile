@@ -18,7 +18,7 @@ obj_dir = obj
 
 #global
 CC = gcc
-LDFLAGS = `sdl2-config --libs --cflags` -lSDL_ttf
+LDFLAGS = `sdl2-config --libs --cflags` -lSDL_ttf -lm
 CFLAGS = -W -Wall
 EXEC = othello
 INCLUDES = $(wildcard $(include_dir)/*.h)

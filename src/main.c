@@ -8,7 +8,7 @@ int main(){
 	//============================================
 	//				  DECLARATION
 	//============================================
-	
+
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
     SDL_Rect options[6];
@@ -33,14 +33,12 @@ int main(){
 	}
 
 	/*
-	police = TTF_OpenFont("font/honor.ttf", 22);
-	if(police == NULL){
+	police = TTF_OpenFont("font/opensans.ttf", 22);
+	if(!police){
     	printf("TTF_OpenFont: %s\n", TTF_GetError());
     	return EXIT_FAILURE;
 	}
 	*/
-
-	//fprintf(stdout, "FIN INITIALISATION\n");
 
 	//============================================
 	//				DEBUT

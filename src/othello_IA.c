@@ -4,7 +4,7 @@
 /* Entrées    : a (un réel), b (un réel)
  * Sorties    : Le plus grand element
  * Variables  :
- * Traitement : Calcul le plus grand élément en effectuant une comparaison
+ * Traitement : Retourne le plus grand élément en effectuant une comparaison
  */
 float max(float a,float b)
 {
@@ -17,7 +17,7 @@ float max(float a,float b)
 /* Entrées    : a (un réel), b (un réel)
  * Sorties    : Le plus petit element
  * Variables  :
- * Traitement : Calcul le plus petit élément en effectuant une comparaison
+ * Traitement : Retourne le plus petit élément en effectuant une comparaison
  */
 float min(float a,float b)
 {
@@ -30,7 +30,7 @@ float min(float a,float b)
 /* Entrées    : o (un tableau 2D de caractères), copy_o (un tableau 2D de caractères)
  * Sorties    :
  * Variables  :
- * Traitement :	copy le tableau o (source) dans le tableau copy_o (cible)
+ * Traitement :	copie le tableau o (source) dans le tableau copy_o (cible)
  */
 void copy_othello(char o[][N], char copy_o[][N]){
 	for(int i=0 ; i<N ; i++){
@@ -47,15 +47,15 @@ void copy_othello(char o[][N], char copy_o[][N]){
  * Traitement : Calcul le nombre de pierre blanche et noir
  */
 void nb_stone(char o[][N], int *black_stone, int *white_stone){
-	black_stone = 0;
-	white_stone = 0;
+	*black_stone = 0;
+	*white_stone = 0;
 
 	for(int i=0 ; i<N ; i++){
 		for(int j=0 ; j<N ; j++){
 			if(o[i][j] == BLACK)
-				black_stone++;
+				(*black_stone)++;
 			else if(o[i][j] == WHITE)
-				white_stone++;
+				(*white_stone)++;
 		}
 	}
 }
